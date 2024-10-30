@@ -1,0 +1,2322 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>MODELO RNN &#8212; Parcial</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'RNN';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Modelos estadísticos" href="Ejercicio2.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Parcial</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Parcial Series de tiempo
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Ejercicio1.html">Parcial 1 de Machine Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Ejercicio2.html">Modelos estadísticos</a></li>
+
+
+
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">MODELO RNN</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/RNN.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>MODELO RNN</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#datos">Datos</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#funcines">Funcines</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ventanas-deslizantes">Ventanas deslizantes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#construccion-del-modelo">Construcción del Modelo</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#metricas">Métricas</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#funcion-de-optimizacion">Función de optimización</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#serie-price">Serie Price</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#residuales">Residuales</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prediciones">Prediciones</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="modelo-rnn">
+<h1>MODELO RNN<a class="headerlink" href="#modelo-rnn" title="Link to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+<span class="kn">from</span> <span class="nn">tensorflow.keras.models</span> <span class="kn">import</span> <span class="n">Sequential</span>
+<span class="kn">from</span> <span class="nn">tensorflow.keras.layers</span> <span class="kn">import</span> <span class="n">SimpleRNN</span><span class="p">,</span> <span class="n">Dense</span><span class="p">,</span> <span class="n">Dropout</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">mean_squared_error</span><span class="p">,</span> <span class="n">mean_absolute_error</span><span class="p">,</span> <span class="n">r2_score</span><span class="p">,</span> <span class="n">mean_absolute_percentage_error</span>
+<span class="kn">from</span> <span class="nn">statsmodels.stats.diagnostic</span> <span class="kn">import</span> <span class="n">acorr_ljungbox</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="k">as</span> <span class="nn">sm</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sqrt</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="datos">
+<h2>Datos<a class="headerlink" href="#datos" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;C:\Users\claud\Downloads\Bitcoin Historical Data.csv&quot;</span><span class="p">)</span>
+<span class="n">data</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Date</th>
+      <th>Price</th>
+      <th>Open</th>
+      <th>High</th>
+      <th>Low</th>
+      <th>Vol.</th>
+      <th>Change %</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>03/24/2024</td>
+      <td>67,211.9</td>
+      <td>64,036.5</td>
+      <td>67,587.8</td>
+      <td>63,812.9</td>
+      <td>65.59K</td>
+      <td>4.96%</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>03/23/2024</td>
+      <td>64,037.8</td>
+      <td>63,785.6</td>
+      <td>65,972.4</td>
+      <td>63,074.9</td>
+      <td>35.11K</td>
+      <td>0.40%</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>03/22/2024</td>
+      <td>63,785.5</td>
+      <td>65,501.5</td>
+      <td>66,633.3</td>
+      <td>62,328.3</td>
+      <td>72.43K</td>
+      <td>-2.62%</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>03/21/2024</td>
+      <td>65,503.8</td>
+      <td>67,860.0</td>
+      <td>68,161.7</td>
+      <td>64,616.1</td>
+      <td>75.26K</td>
+      <td>-3.46%</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>03/20/2024</td>
+      <td>67,854.0</td>
+      <td>62,046.8</td>
+      <td>68,029.5</td>
+      <td>60,850.9</td>
+      <td>133.53K</td>
+      <td>9.35%</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>4994</th>
+      <td>07/22/2010</td>
+      <td>0.1</td>
+      <td>0.1</td>
+      <td>0.1</td>
+      <td>0.1</td>
+      <td>2.16K</td>
+      <td>0.00%</td>
+    </tr>
+    <tr>
+      <th>4995</th>
+      <td>07/21/2010</td>
+      <td>0.1</td>
+      <td>0.1</td>
+      <td>0.1</td>
+      <td>0.1</td>
+      <td>0.58K</td>
+      <td>0.00%</td>
+    </tr>
+    <tr>
+      <th>4996</th>
+      <td>07/20/2010</td>
+      <td>0.1</td>
+      <td>0.1</td>
+      <td>0.1</td>
+      <td>0.1</td>
+      <td>0.26K</td>
+      <td>0.00%</td>
+    </tr>
+    <tr>
+      <th>4997</th>
+      <td>07/19/2010</td>
+      <td>0.1</td>
+      <td>0.1</td>
+      <td>0.1</td>
+      <td>0.1</td>
+      <td>0.57K</td>
+      <td>0.00%</td>
+    </tr>
+    <tr>
+      <th>4998</th>
+      <td>07/18/2010</td>
+      <td>0.1</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>0.1</td>
+      <td>0.08K</td>
+      <td>0.00%</td>
+    </tr>
+  </tbody>
+</table>
+<p>4999 rows × 7 columns</p>
+</div></div></div>
+</div>
+<p>Para que los datos estén en el formato correcto se les aplicará el siguiente proceso de eliminación de formatos</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Eliminar comas y convertir las columnas relevantes a float</span>
+<span class="n">data</span><span class="p">[</span><span class="s1">&#39;Price&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;Price&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+<span class="n">data</span><span class="p">[</span><span class="s1">&#39;Open&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;Open&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+<span class="n">data</span><span class="p">[</span><span class="s1">&#39;High&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;High&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+<span class="c1"># Función para convertir valores con &#39;K&#39;, &#39;M&#39;, &#39;B&#39; o números directos</span>
+<span class="k">def</span> <span class="nf">convert_volume</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="c1"># Verificar si el valor ya es numérico</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">value</span>  <span class="c1"># Devolver el valor si ya es numérico</span>
+    <span class="k">elif</span> <span class="s1">&#39;K&#39;</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;K&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span> <span class="o">*</span> <span class="mi">1_000</span>
+    <span class="k">elif</span> <span class="s1">&#39;M&#39;</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;M&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span> <span class="o">*</span> <span class="mi">1_000_000</span>
+    <span class="k">elif</span> <span class="s1">&#39;B&#39;</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span> <span class="o">*</span> <span class="mi">1_000_000_000</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span>
+
+<span class="c1"># Aplicar la función a la columna &#39;Vol.&#39;</span>
+<span class="n">data</span><span class="p">[</span><span class="s1">&#39;Vol.&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;Vol.&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">convert_volume</span><span class="p">)</span>
+
+<span class="c1"># Verificar que la conversión haya sido exitosa</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">[[</span><span class="s1">&#39;Vol.&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>       Vol.
+0   65590.0
+1   35110.0
+2   72430.0
+3   75260.0
+4  133530.0
+</pre></div>
+</div>
+</div>
+</div>
+<p>Se verifica el formato de la fecha y se agrega la columnna indice</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Asegurarse de que la columna &quot;Date&quot; sea de tipo datetime</span>
+<span class="n">data</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">],</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;%m/</span><span class="si">%d</span><span class="s1">/%Y&#39;</span><span class="p">)</span>
+<span class="c1"># Ordenar los datos por fecha de forma ascendente</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;Date&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1"># Verificar si hay valores nulos en cada columna</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+<span class="c1"># Alternativa: Mostrar las filas que contengan valores faltantes</span>
+<span class="n">missing_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Filas con datos faltantes:</span><span class="se">\n</span><span class="si">{</span><span class="n">missing_data</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Asegúrate de que la columna &#39;Date&#39; esté en formato datetime</span>
+
+<span class="c1"># Convertir la fecha a un timestamp (número de días desde Epoch)</span>
+
+<span class="c1"># Ver las primeras filas con la nueva columna numérica</span>
+<span class="n">data</span><span class="p">[</span><span class="s1">&#39;indice&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Date        0
+Price       0
+Open        0
+High        0
+Low         0
+Vol.        6
+Change %    0
+dtype: int64
+Filas con datos faltantes:
+          Date  Price  Open  High   Low  Vol. Change %
+337 2011-06-20   17.5  17.5  17.5  17.5   NaN    0.00%
+338 2011-06-21   17.5  17.5  17.5  17.5   NaN    0.00%
+339 2011-06-22   17.5  17.5  17.5  17.5   NaN    0.00%
+340 2011-06-23   17.5  17.5  17.5  17.5   NaN    0.00%
+341 2011-06-24   17.5  17.5  17.5  17.5   NaN    0.00%
+342 2011-06-25   17.5  17.5  17.5  17.5   NaN    0.00%
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="funcines">
+<h2>Funcines<a class="headerlink" href="#funcines" title="Link to this heading">#</a></h2>
+<section id="ventanas-deslizantes">
+<h3>Ventanas deslizantes<a class="headerlink" href="#ventanas-deslizantes" title="Link to this heading">#</a></h3>
+<p>Para esto creamos una función que divide los datos en entrenamiento, validación y prueba. Esta función avanca con un paso de 1. las ventanas y el horizonte de predicción son variables</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<span class="k">def</span> <span class="nf">create_sliding_windows</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span> <span class="n">horizon</span><span class="p">):</span>
+    
+
+    <span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+    <span class="n">X_val</span><span class="p">,</span> <span class="n">Y_val</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+    <span class="n">X_test</span><span class="p">,</span> <span class="n">Y_test</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+
+    <span class="c1"># Generar ventanas deslizantes con sus índices correspondientes</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">-</span> <span class="n">window_size</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">horizon</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="c1"># Entrenamiento</span>
+        <span class="n">X_train</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span> <span class="o">+</span> <span class="n">window_size</span><span class="p">])</span>
+        <span class="n">Y_train</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="n">window_size</span><span class="p">:</span><span class="n">i</span> <span class="o">+</span> <span class="n">window_size</span> <span class="o">+</span> <span class="n">horizon</span><span class="p">])</span>
+
+        <span class="c1"># Validación</span>
+        <span class="n">X_val</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="n">window_size</span><span class="p">:</span><span class="n">i</span> <span class="o">+</span> <span class="n">window_size</span> <span class="o">+</span> <span class="n">horizon</span><span class="p">])</span>
+        <span class="n">Y_val</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="n">window_size</span> <span class="o">+</span> <span class="n">horizon</span><span class="p">:</span><span class="n">i</span> <span class="o">+</span> <span class="n">window_size</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">horizon</span><span class="p">])</span>
+
+        <span class="c1"># Prueba</span>
+        <span class="n">X_test</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="n">window_size</span> <span class="o">+</span> <span class="n">horizon</span><span class="p">:</span><span class="n">i</span> <span class="o">+</span> <span class="n">window_size</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">horizon</span><span class="p">])</span>
+        <span class="n">Y_test</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="n">window_size</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">horizon</span><span class="p">:</span><span class="n">i</span> <span class="o">+</span> <span class="n">window_size</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">horizon</span><span class="p">])</span>
+
+    <span class="c1"># Convertir las ventanas a arrays NumPy con forma (n_samples, timesteps, features)</span>
+    
+    <span class="c1"># Convertir a arrays de NumPy y ajustar las dimensiones</span>
+    <span class="n">X_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># (n_samples, timesteps, n_features)</span>
+    <span class="n">X_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">X_val</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">X_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">Y_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">Y_train</span><span class="p">)</span>  <span class="c1"># (n_samples, horizon)</span>
+    <span class="n">Y_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">Y_val</span><span class="p">)</span>
+    <span class="n">Y_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">Y_test</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">X_val</span><span class="p">,</span> <span class="n">Y_val</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">Y_test</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="construccion-del-modelo">
+<h3>Construcción del Modelo<a class="headerlink" href="#construccion-del-modelo" title="Link to this heading">#</a></h3>
+<p>Creamos una función para crear el modelo teniendo en cuenta los parametros de las iteraciones neurons, window, dropout_rate, horizon. Batch size se aplicará más adelante</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tensorflow.keras.layers</span> <span class="kn">import</span> <span class="n">SimpleRNN</span><span class="p">,</span> <span class="n">Dense</span><span class="p">,</span> <span class="n">Dropout</span><span class="p">,</span> <span class="n">Input</span>
+
+<span class="k">def</span> <span class="nf">build_rnn_model</span><span class="p">(</span><span class="n">neurons</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">dropout_rate</span><span class="p">,</span> <span class="n">horizon</span><span class="p">):</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">()</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">window</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">SimpleRNN</span><span class="p">(</span><span class="n">neurons</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">))</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dropout</span><span class="p">(</span><span class="n">dropout_rate</span><span class="p">))</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="n">horizon</span><span class="p">))</span>  
+    <span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="s1">&#39;adam&#39;</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="s1">&#39;mse&#39;</span><span class="p">)</span>  <span class="c1"># Usar la pérdida personalizada</span>
+    <span class="k">return</span> <span class="n">model</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">mean_absolute_error</span><span class="p">,</span> <span class="n">mean_squared_error</span><span class="p">,</span> <span class="n">r2_score</span>
+<span class="kn">from</span> <span class="nn">statsmodels.stats.diagnostic</span> <span class="kn">import</span> <span class="n">acorr_ljungbox</span>
+<span class="kn">from</span> <span class="nn">statsmodels.tsa.stattools</span> <span class="kn">import</span> <span class="n">q_stat</span><span class="p">,</span> <span class="n">acf</span>
+<span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="k">as</span> <span class="nn">sm</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">shapiro</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="metricas">
+<h3>Métricas<a class="headerlink" href="#metricas" title="Link to this heading">#</a></h3>
+<p>Creamos una función que calcule las metricas importantes</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">metricas</span><span class="p">(</span><span class="n">windows</span><span class="p">,</span> <span class="n">pred</span><span class="p">,</span> <span class="n">neurons</span><span class="p">,</span> <span class="n">batchsize</span><span class="p">,</span> <span class="n">dropout_rate</span><span class="p">,</span> <span class="n">horizon</span><span class="p">,</span> <span class="n">window</span><span class="p">):</span>
+    
+    <span class="c1"># Calcular métricas en Validación</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">pred</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Advertencia: Las predicciones contienen NaN.&quot;</span><span class="p">)</span>
+        <span class="n">metrics</span><span class="o">=</span><span class="kc">None</span>
+    <span class="k">else</span><span class="p">:</span>
+        
+        <span class="n">mae</span> <span class="o">=</span> <span class="n">mean_absolute_error</span><span class="p">(</span><span class="n">windows</span><span class="p">,</span> <span class="n">pred</span><span class="p">)</span>
+        <span class="n">mse</span> <span class="o">=</span> <span class="n">mean_squared_error</span><span class="p">(</span><span class="n">windows</span><span class="p">,</span> <span class="n">pred</span><span class="p">)</span>
+        <span class="n">rmse</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mse</span><span class="p">)</span>
+        <span class="n">mape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">((</span><span class="n">windows</span> <span class="o">-</span> <span class="n">pred</span><span class="p">)</span> <span class="o">/</span> <span class="n">windows</span><span class="p">))</span> <span class="o">*</span> <span class="mi">100</span>
+        <span class="n">r2</span> <span class="o">=</span> <span class="n">r2_score</span><span class="p">(</span><span class="n">windows</span><span class="p">,</span> <span class="n">pred</span><span class="p">)</span>
+
+        
+        <span class="c1"># Guardar métricas del conjunto de validación junto con pruebas de hipótesis</span>
+        <span class="n">metrics</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;neurons&#39;</span><span class="p">:</span> <span class="n">neurons</span><span class="p">,</span>
+            <span class="s1">&#39;batchsize&#39;</span><span class="p">:</span> <span class="n">batchsize</span><span class="p">,</span>
+            <span class="s1">&#39;Dropout&#39;</span><span class="p">:</span> <span class="n">dropout_rate</span><span class="p">,</span>
+            <span class="s1">&#39;horizon&#39;</span><span class="p">:</span> <span class="n">horizon</span><span class="p">,</span>
+            <span class="s1">&#39;window&#39;</span><span class="p">:</span> <span class="n">window</span><span class="p">,</span>
+            <span class="s1">&#39;MAPE&#39;</span><span class="p">:</span> <span class="n">mape</span><span class="p">,</span>
+            <span class="s1">&#39;MAE&#39;</span><span class="p">:</span> <span class="n">mae</span><span class="p">,</span>
+            <span class="s1">&#39;MSE&#39;</span><span class="p">:</span> <span class="n">mse</span><span class="p">,</span>
+            <span class="s1">&#39;RMSE&#39;</span><span class="p">:</span> <span class="n">rmse</span><span class="p">,</span>
+            <span class="s1">&#39;R2&#39;</span><span class="p">:</span> <span class="n">r2</span><span class="p">,</span>
+        
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">metrics</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="k">as</span> <span class="nn">sm</span>
+<span class="kn">from</span> <span class="nn">statsmodels.graphics.gofplots</span> <span class="kn">import</span> <span class="n">qqplot</span>
+<span class="kn">from</span> <span class="nn">statsmodels.tsa.stattools</span> <span class="kn">import</span> <span class="n">acf</span><span class="p">,</span> <span class="n">q_stat</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">mean_absolute_error</span><span class="p">,</span> <span class="n">mean_squared_error</span><span class="p">,</span> <span class="n">r2_score</span>
+<span class="kn">import</span> <span class="nn">plotly.express</span> <span class="k">as</span> <span class="nn">px</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">tensorflow.keras.callbacks</span> <span class="kn">import</span> <span class="n">EarlyStopping</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">MinMaxScaler</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="funcion-de-optimizacion">
+<h3>Función de optimización<a class="headerlink" href="#funcion-de-optimizacion" title="Link to this heading">#</a></h3>
+<p>se creo una función con la cual se itera entre todas las posibles combinaciones de paramtros. Se tiene en cuenta el early stoping y la estabilización de la metrica mse para encontar el mejor modelo. luego de que el mse no varie más del 5% 5 iteraciones seguidas se detiene. Además se guardan los residuos y metricas de cada modelo para su posterior uso.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">busqueda</span><span class="p">(</span><span class="n">datos</span><span class="p">,</span> <span class="n">windows</span><span class="p">,</span> <span class="n">horizons</span><span class="p">,</span> <span class="n">dropout_rates</span><span class="p">,</span> <span class="n">batchsizes</span><span class="p">,</span> <span class="n">neurons_list</span><span class="p">):</span>
+    <span class="n">validation_metrics</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">test_metrics</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">train_metrics</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">residual_hist</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">best_model</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">params_best_model</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">best_score</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span> 
+    <span class="n">previous_mse</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Para rastrear el MSE de la iteración anterior</span>
+    <span class="n">residuals_bestmodel</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">stable_iterations</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Contador para rastrear iteraciones estables</span>
+
+    <span class="n">early_stop</span> <span class="o">=</span> <span class="n">EarlyStopping</span><span class="p">(</span>
+        <span class="n">monitor</span><span class="o">=</span><span class="s1">&#39;val_loss&#39;</span><span class="p">,</span>
+        <span class="n">patience</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+        <span class="n">restore_best_weights</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span>
+    <span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">neurons</span> <span class="ow">in</span> <span class="n">neurons_list</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">window</span> <span class="ow">in</span> <span class="n">windows</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">horizon</span> <span class="ow">in</span> <span class="n">horizons</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">window</span> <span class="o">==</span> <span class="n">horizon</span><span class="p">:</span>
+                    <span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">x_val</span><span class="p">,</span> <span class="n">y_val</span><span class="p">,</span> <span class="n">x_test</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">create_sliding_windows</span><span class="p">(</span>
+                        <span class="n">datos</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">horizon</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">dropout_rate</span> <span class="ow">in</span> <span class="n">dropout_rates</span><span class="p">:</span>
+                        <span class="k">for</span> <span class="n">batchsize</span> <span class="ow">in</span> <span class="n">batchsizes</span><span class="p">:</span>
+
+                            <span class="c1"># Crear y entrenar el modelo</span>
+                            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Entrenando modelo con </span><span class="si">{</span><span class="n">neurons</span><span class="si">}</span><span class="s2"> neuronas, dropout </span><span class="si">{</span><span class="n">dropout_rate</span><span class="si">}</span><span class="s2">, &quot;</span>
+                                  <span class="sa">f</span><span class="s2">&quot;batch size </span><span class="si">{</span><span class="n">batchsize</span><span class="si">}</span><span class="s2">, horizon </span><span class="si">{</span><span class="n">horizon</span><span class="si">}</span><span class="s2">, window </span><span class="si">{</span><span class="n">window</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                            <span class="n">model</span> <span class="o">=</span> <span class="n">build_rnn_model</span><span class="p">(</span><span class="n">neurons</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">dropout_rate</span><span class="p">,</span> <span class="n">horizon</span><span class="p">)</span>
+
+                            <span class="n">early_stop</span> <span class="o">=</span> <span class="n">EarlyStopping</span><span class="p">(</span>
+                                <span class="n">monitor</span><span class="o">=</span><span class="s1">&#39;val_loss&#39;</span><span class="p">,</span> <span class="n">patience</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> 
+                                <span class="n">restore_best_weights</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+                            <span class="n">history</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
+                                <span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span>
+                                <span class="n">validation_data</span><span class="o">=</span><span class="p">(</span><span class="n">x_val</span><span class="p">,</span> <span class="n">y_val</span><span class="p">),</span>
+                                <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span><span class="n">early_stop</span><span class="p">],</span>
+                                <span class="n">epochs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batchsize</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span>
+                            <span class="p">)</span>
+
+                            <span class="c1"># Predicciones y cálculo de residuos</span>
+                            <span class="n">val_pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_val</span><span class="p">)</span>
+                            <span class="n">test_pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_test</span><span class="p">)</span>
+                            <span class="n">train_pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_train</span><span class="p">)</span>
+
+                            <span class="n">residuals</span> <span class="o">=</span> <span class="n">y_val</span> <span class="o">-</span> <span class="n">val_pred</span>  <span class="c1"># Residuos de validación</span>
+                            <span class="n">residual_hist</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                                <span class="s1">&#39;neurons&#39;</span><span class="p">:</span> <span class="n">neurons</span><span class="p">,</span>
+                                <span class="s1">&#39;batchsize&#39;</span><span class="p">:</span> <span class="n">batchsize</span><span class="p">,</span>
+                                <span class="s1">&#39;dropout_rate&#39;</span><span class="p">:</span> <span class="n">dropout_rate</span><span class="p">,</span>
+                                <span class="s1">&#39;horizon&#39;</span><span class="p">:</span> <span class="n">horizon</span><span class="p">,</span>
+                                <span class="s1">&#39;window&#39;</span><span class="p">:</span> <span class="n">window</span><span class="p">,</span>
+                                <span class="s1">&#39;residuals&#39;</span><span class="p">:</span> <span class="n">residuals</span>
+                            <span class="p">})</span>
+
+                            <span class="c1"># Calcular métricas en validación</span>
+                            
+                            <span class="n">metricas_val</span> <span class="o">=</span> <span class="n">metricas</span><span class="p">(</span><span class="n">y_val</span><span class="p">,</span> <span class="n">val_pred</span><span class="p">,</span> <span class="n">neurons</span><span class="p">,</span> <span class="n">batchsize</span><span class="p">,</span> <span class="n">dropout_rate</span><span class="p">,</span> <span class="n">horizon</span><span class="p">,</span> <span class="n">window</span><span class="p">)</span>
+                            <span class="n">validation_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">metricas_val</span><span class="p">)</span>
+
+                            <span class="c1"># Calcular métricas en prueba</span>
+                            <span class="n">metricas_test</span> <span class="o">=</span> <span class="n">metricas</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">test_pred</span><span class="p">,</span> <span class="n">neurons</span><span class="p">,</span> <span class="n">batchsize</span><span class="p">,</span> <span class="n">dropout_rate</span><span class="p">,</span> <span class="n">horizon</span><span class="p">,</span> <span class="n">window</span><span class="p">)</span>
+                            <span class="n">test_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">metricas_test</span><span class="p">)</span>
+
+                            <span class="c1"># Calcular métricas en entrenamiento</span>
+                            <span class="n">metricas_train</span> <span class="o">=</span> <span class="n">metricas</span><span class="p">(</span><span class="n">y_train</span><span class="p">,</span> <span class="n">train_pred</span><span class="p">,</span> <span class="n">neurons</span><span class="p">,</span> <span class="n">batchsize</span><span class="p">,</span> <span class="n">dropout_rate</span><span class="p">,</span> <span class="n">horizon</span><span class="p">,</span> <span class="n">window</span><span class="p">)</span>
+                            <span class="n">train_metrics</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">metricas_train</span><span class="p">)</span>
+
+                            <span class="k">if</span> <span class="n">metricas_val</span><span class="p">:</span>
+                                <span class="n">mse</span> <span class="o">=</span> <span class="n">metricas_val</span><span class="p">[</span><span class="s1">&#39;MSE&#39;</span><span class="p">]</span>
+                                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;MSE: </span><span class="si">{</span><span class="n">mse</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+                                <span class="c1"># Verificar la fluctuación del MSE</span>
+                                <span class="k">if</span> <span class="n">previous_mse</span><span class="p">:</span>
+                                    <span class="n">variation</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">mse</span> <span class="o">-</span> <span class="n">previous_mse</span><span class="p">)</span> <span class="o">/</span> <span class="n">previous_mse</span>
+                                    <span class="k">if</span> <span class="n">variation</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">:</span>
+                                        <span class="n">stable_iterations</span> <span class="o">+=</span> <span class="mi">1</span>
+                                        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Fluctuación menor al 5% en el MSE por </span><span class="si">{</span><span class="n">stable_iterations</span><span class="si">}</span><span class="s2"> iteración(es).&quot;</span><span class="p">)</span>
+                                    <span class="k">else</span><span class="p">:</span>
+                                        <span class="n">stable_iterations</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Reiniciar contador si hay variación mayor al 5%</span>
+
+                                    <span class="k">if</span> <span class="n">stable_iterations</span> <span class="o">&gt;=</span> <span class="mi">5</span><span class="p">:</span>
+                                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Fluctuación menor al 5</span><span class="si">% d</span><span class="s2">urante 5 iteraciones consecutivas. Deteniendo la búsqueda.&quot;</span><span class="p">)</span>
+                                        <span class="k">return</span> <span class="p">(</span><span class="n">validation_metrics</span><span class="p">,</span> <span class="n">test_metrics</span><span class="p">,</span> <span class="n">train_metrics</span><span class="p">,</span> 
+                                                <span class="n">residual_hist</span><span class="p">,</span> <span class="n">best_model</span><span class="p">,</span> <span class="n">params_best_model</span><span class="p">,</span> <span class="n">residuals_bestmodel</span><span class="p">)</span>
+
+                                <span class="n">previous_mse</span> <span class="o">=</span> <span class="n">mse</span>
+
+                                <span class="c1"># Guardar el mejor modelo si es necesario</span>
+                                <span class="k">if</span> <span class="n">mse</span> <span class="o">&lt;</span> <span class="n">best_score</span><span class="p">:</span>
+                                    <span class="n">best_score</span> <span class="o">=</span> <span class="n">mse</span>
+                                    <span class="n">best_model</span> <span class="o">=</span> <span class="n">model</span>
+                                    <span class="n">params_best_model</span> <span class="o">=</span> <span class="p">{</span>
+                                        <span class="s1">&#39;neurons&#39;</span><span class="p">:</span> <span class="n">neurons</span><span class="p">,</span>
+                                        <span class="s1">&#39;batchsize&#39;</span><span class="p">:</span> <span class="n">batchsize</span><span class="p">,</span>
+                                        <span class="s1">&#39;dropout_rate&#39;</span><span class="p">:</span> <span class="n">dropout_rate</span><span class="p">,</span>
+                                        <span class="s1">&#39;horizon&#39;</span><span class="p">:</span> <span class="n">horizon</span><span class="p">,</span>
+                                        <span class="s1">&#39;window&#39;</span><span class="p">:</span> <span class="n">window</span><span class="p">,</span>
+                                        <span class="s1">&#39;MSE&#39;</span><span class="p">:</span> <span class="n">mse</span>
+                                    <span class="p">}</span>
+                                    <span class="n">residuals_bestmodel</span> <span class="o">=</span> <span class="n">residuals</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="n">validation_metrics</span><span class="p">,</span> <span class="n">test_metrics</span><span class="p">,</span> <span class="n">train_metrics</span><span class="p">,</span> <span class="n">residual_hist</span><span class="p">,</span> <span class="n">best_model</span><span class="p">,</span> <span class="n">params_best_model</span><span class="p">,</span> <span class="n">residuals_bestmodel</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="serie-price">
+<h2>Serie Price<a class="headerlink" href="#serie-price" title="Link to this heading">#</a></h2>
+<p>Utilización de las funciones para encontrar los mejores parametros para la serie de tiempo <code class="docutils literal notranslate"><span class="pre">Price</span></code></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">windows</span><span class="o">=</span><span class="p">[</span><span class="mi">7</span><span class="p">,</span><span class="mi">14</span><span class="p">,</span><span class="mi">21</span><span class="p">,</span><span class="mi">28</span><span class="p">]</span>
+<span class="n">horizons</span><span class="o">=</span><span class="p">[</span><span class="mi">7</span><span class="p">,</span><span class="mi">14</span><span class="p">,</span><span class="mi">21</span><span class="p">,</span><span class="mi">28</span><span class="p">]</span>
+<span class="n">dropout_rates</span><span class="o">=</span><span class="p">[</span><span class="mf">0.2</span><span class="p">,</span><span class="mf">0.4</span><span class="p">,</span><span class="mf">0.6</span><span class="p">,</span><span class="mf">0.8</span><span class="p">]</span>
+<span class="n">batchsizes</span><span class="o">=</span><span class="p">[</span><span class="mi">16</span><span class="p">,</span><span class="mi">32</span><span class="p">,</span><span class="mi">64</span><span class="p">,</span><span class="mi">128</span><span class="p">]</span>
+<span class="n">neurons_list</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span>
+
+
+<span class="n">datos</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Price&#39;</span><span class="p">]</span>
+<span class="n">validation_metrics_price</span><span class="p">,</span><span class="n">test_metrics_price</span><span class="p">,</span><span class="n">train_metrics_price</span><span class="p">,</span><span class="n">residual_hist_price</span><span class="p">,</span><span class="n">best_model_price</span><span class="p">,</span><span class="n">params_best_model_price</span><span class="p">,</span><span class="n">residuals_bestmodel_price</span><span class="o">=</span><span class="n">busqueda</span> <span class="p">(</span><span class="n">datos</span><span class="p">,</span><span class="n">windows</span><span class="p">,</span><span class="n">horizons</span><span class="p">,</span><span class="n">dropout_rates</span><span class="p">,</span><span class="n">batchsizes</span><span class="p">,</span><span class="n">neurons_list</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Entrenando modelo con 10 neuronas, dropout 0.2, batch size 16, horizon 7, window 7
+156/156 [==============================] - 0s 2ms/step
+156/156 [==============================] - 0s 2ms/step
+156/156 [==============================] - 0s 2ms/step
+MSE: 6246252.279987531
+Entrenando modelo con 10 neuronas, dropout 0.2, batch size 32, horizon 7, window 7
+156/156 [==============================] - 0s 1ms/step
+156/156 [==============================] - 0s 2ms/step
+156/156 [==============================] - 0s 2ms/step
+MSE: 26217196.28269611
+Entrenando modelo con 10 neuronas, dropout 0.2, batch size 64, horizon 7, window 7
+156/156 [==============================] - 0s 2ms/step
+156/156 [==============================] - 0s 2ms/step
+156/156 [==============================] - 0s 2ms/step
+MSE: 225197645.8000935
+Entrenando modelo con 10 neuronas, dropout 0.2, batch size 128, horizon 7, window 7
+156/156 [==============================] - 0s 2ms/step
+156/156 [==============================] - 0s 2ms/step
+156/156 [==============================] - 0s 2ms/step
+MSE: 251841553.16208726
+Entrenando modelo con 10 neuronas, dropout 0.4, batch size 16, horizon 7, window 7
+156/156 [==============================] - 0s 1ms/step
+156/156 [==============================] - 0s 2ms/step
+156/156 [==============================] - 0s 2ms/step
+MSE: 35171610.64077798
+Entrenando modelo con 10 neuronas, dropout 0.4, batch size 32, horizon 7, window 7
+156/156 [==============================] - 0s 2ms/step
+156/156 [==============================] - 0s 2ms/step
+156/156 [==============================] - 0s 2ms/step
+MSE: 119449792.56481382
+Entrenando modelo con 10 neuronas, dropout 0.4, batch size 64, horizon 7, window 7
+156/156 [==============================] - 0s 2ms/step
+156/156 [==============================] - 0s 2ms/step
+156/156 [==============================] - 0s 2ms/step
+MSE: 283364320.90698713
+Entrenando modelo con 10 neuronas, dropout 0.4, batch size 128, horizon 7, window 7
+156/156 [==============================] - 0s 2ms/step
+156/156 [==============================] - 0s 2ms/step
+156/156 [==============================] - 0s 2ms/step
+MSE: 224266159.09617597
+Entrenando modelo con 10 neuronas, dropout 0.6, batch size 16, horizon 7, window 7
+156/156 [==============================] - 0s 2ms/step
+156/156 [==============================] - 0s 2ms/step
+156/156 [==============================] - 0s 2ms/step
+MSE: 150270062.5241825
+Entrenando modelo con 10 neuronas, dropout 0.6, batch size 32, horizon 7, window 7
+156/156 [==============================] - 0s 2ms/step
+156/156 [==============================] - 0s 1ms/step
+156/156 [==============================] - 0s 1ms/step
+MSE: 124855088.75732413
+Entrenando modelo con 10 neuronas, dropout 0.6, batch size 64, horizon 7, window 7
+156/156 [==============================] - 0s 2ms/step
+156/156 [==============================] - 0s 2ms/step
+156/156 [==============================] - 0s 2ms/step
+MSE: 350452732.4963622
+Entrenando modelo con 10 neuronas, dropout 0.6, batch size 128, horizon 7, window 7
+156/156 [==============================] - 0s 2ms/step
+156/156 [==============================] - 0s 2ms/step
+156/156 [==============================] - 0s 2ms/step
+MSE: 197698596.98986155
+Entrenando modelo con 10 neuronas, dropout 0.8, batch size 16, horizon 7, window 7
+156/156 [==============================] - 0s 2ms/step
+156/156 [==============================] - 0s 2ms/step
+156/156 [==============================] - 0s 2ms/step
+MSE: 249295913.42286488
+Entrenando modelo con 10 neuronas, dropout 0.8, batch size 32, horizon 7, window 7
+156/156 [==============================] - 0s 2ms/step
+156/156 [==============================] - 0s 2ms/step
+156/156 [==============================] - 0s 2ms/step
+MSE: 287906085.036348
+Entrenando modelo con 10 neuronas, dropout 0.8, batch size 64, horizon 7, window 7
+156/156 [==============================] - 0s 1ms/step
+156/156 [==============================] - 0s 2ms/step
+156/156 [==============================] - 0s 2ms/step
+MSE: 277372841.26149285
+Fluctuación menor al 5% en el MSE por 1 iteración(es).
+Entrenando modelo con 10 neuronas, dropout 0.8, batch size 128, horizon 7, window 7
+156/156 [==============================] - 0s 2ms/step
+156/156 [==============================] - 0s 2ms/step
+156/156 [==============================] - 0s 2ms/step
+MSE: 366708207.6445824
+Entrenando modelo con 10 neuronas, dropout 0.2, batch size 16, horizon 14, window 14
+155/155 [==============================] - 0s 2ms/step
+155/155 [==============================] - 0s 2ms/step
+155/155 [==============================] - 0s 2ms/step
+MSE: 7008833.457931966
+Entrenando modelo con 10 neuronas, dropout 0.2, batch size 32, horizon 14, window 14
+155/155 [==============================] - 0s 2ms/step
+155/155 [==============================] - 0s 2ms/step
+155/155 [==============================] - 0s 2ms/step
+MSE: 98284571.47771512
+Entrenando modelo con 10 neuronas, dropout 0.2, batch size 64, horizon 14, window 14
+155/155 [==============================] - 0s 2ms/step
+155/155 [==============================] - 0s 2ms/step
+155/155 [==============================] - 0s 2ms/step
+MSE: 165102915.2167814
+Entrenando modelo con 10 neuronas, dropout 0.2, batch size 128, horizon 14, window 14
+155/155 [==============================] - 0s 2ms/step
+155/155 [==============================] - 0s 2ms/step
+155/155 [==============================] - 0s 2ms/step
+MSE: 265567077.93251875
+Entrenando modelo con 10 neuronas, dropout 0.4, batch size 16, horizon 14, window 14
+155/155 [==============================] - 0s 2ms/step
+155/155 [==============================] - 0s 2ms/step
+155/155 [==============================] - 0s 2ms/step
+MSE: 47694106.79630792
+Entrenando modelo con 10 neuronas, dropout 0.4, batch size 32, horizon 14, window 14
+155/155 [==============================] - 0s 2ms/step
+155/155 [==============================] - 0s 2ms/step
+155/155 [==============================] - 0s 2ms/step
+MSE: 222986269.90985197
+Entrenando modelo con 10 neuronas, dropout 0.4, batch size 64, horizon 14, window 14
+155/155 [==============================] - 0s 2ms/step
+155/155 [==============================] - 0s 2ms/step
+155/155 [==============================] - 0s 2ms/step
+MSE: 281383093.59607464
+Entrenando modelo con 10 neuronas, dropout 0.4, batch size 128, horizon 14, window 14
+155/155 [==============================] - 0s 2ms/step
+155/155 [==============================] - 0s 2ms/step
+155/155 [==============================] - 0s 2ms/step
+MSE: 363007523.93661207
+Entrenando modelo con 10 neuronas, dropout 0.6, batch size 16, horizon 14, window 14
+155/155 [==============================] - 0s 2ms/step
+155/155 [==============================] - 0s 2ms/step
+155/155 [==============================] - 0s 2ms/step
+MSE: 120889822.19502167
+Entrenando modelo con 10 neuronas, dropout 0.6, batch size 32, horizon 14, window 14
+155/155 [==============================] - 0s 2ms/step
+155/155 [==============================] - 0s 2ms/step
+155/155 [==============================] - 0s 2ms/step
+MSE: 181995118.15284222
+Entrenando modelo con 10 neuronas, dropout 0.6, batch size 64, horizon 14, window 14
+155/155 [==============================] - 0s 2ms/step
+155/155 [==============================] - 0s 2ms/step
+155/155 [==============================] - 0s 2ms/step
+MSE: 362156756.5832964
+Entrenando modelo con 10 neuronas, dropout 0.6, batch size 128, horizon 14, window 14
+155/155 [==============================] - 0s 2ms/step
+155/155 [==============================] - 0s 2ms/step
+155/155 [==============================] - 0s 2ms/step
+MSE: 383443688.44931394
+Entrenando modelo con 10 neuronas, dropout 0.8, batch size 16, horizon 14, window 14
+155/155 [==============================] - 0s 2ms/step
+155/155 [==============================] - 0s 2ms/step
+155/155 [==============================] - 0s 2ms/step
+MSE: 203811272.21130466
+Entrenando modelo con 10 neuronas, dropout 0.8, batch size 32, horizon 14, window 14
+155/155 [==============================] - 0s 2ms/step
+155/155 [==============================] - 0s 2ms/step
+155/155 [==============================] - 0s 2ms/step
+MSE: 266194659.17352682
+Entrenando modelo con 10 neuronas, dropout 0.8, batch size 64, horizon 14, window 14
+155/155 [==============================] - 0s 2ms/step
+155/155 [==============================] - 0s 2ms/step
+155/155 [==============================] - 0s 2ms/step
+MSE: 328380904.8539367
+Entrenando modelo con 10 neuronas, dropout 0.8, batch size 128, horizon 14, window 14
+155/155 [==============================] - 0s 2ms/step
+155/155 [==============================] - 0s 2ms/step
+155/155 [==============================] - 0s 2ms/step
+MSE: 324049252.8190907
+Fluctuación menor al 5% en el MSE por 1 iteración(es).
+Entrenando modelo con 10 neuronas, dropout 0.2, batch size 16, horizon 21, window 21
+154/154 [==============================] - 0s 2ms/step
+154/154 [==============================] - 0s 2ms/step
+154/154 [==============================] - 0s 2ms/step
+MSE: 10037440.166347494
+Entrenando modelo con 10 neuronas, dropout 0.2, batch size 32, horizon 21, window 21
+154/154 [==============================] - 0s 2ms/step
+154/154 [==============================] - 0s 2ms/step
+154/154 [==============================] - 0s 2ms/step
+MSE: 68811272.49941081
+Entrenando modelo con 10 neuronas, dropout 0.2, batch size 64, horizon 21, window 21
+154/154 [==============================] - 0s 2ms/step
+154/154 [==============================] - 0s 2ms/step
+154/154 [==============================] - 0s 2ms/step
+MSE: 231234415.02936786
+Entrenando modelo con 10 neuronas, dropout 0.2, batch size 128, horizon 21, window 21
+154/154 [==============================] - 0s 2ms/step
+154/154 [==============================] - 0s 2ms/step
+154/154 [==============================] - 0s 2ms/step
+MSE: 284448498.5541089
+Entrenando modelo con 10 neuronas, dropout 0.4, batch size 16, horizon 21, window 21
+154/154 [==============================] - 0s 2ms/step
+154/154 [==============================] - 0s 2ms/step
+154/154 [==============================] - 0s 2ms/step
+MSE: 63663782.883084
+Entrenando modelo con 10 neuronas, dropout 0.4, batch size 32, horizon 21, window 21
+154/154 [==============================] - 0s 2ms/step
+154/154 [==============================] - 0s 2ms/step
+154/154 [==============================] - 0s 2ms/step
+MSE: 137185650.227041
+Entrenando modelo con 10 neuronas, dropout 0.4, batch size 64, horizon 21, window 21
+154/154 [==============================] - 0s 2ms/step
+154/154 [==============================] - 0s 2ms/step
+154/154 [==============================] - 0s 2ms/step
+MSE: 202074379.68432283
+Entrenando modelo con 10 neuronas, dropout 0.4, batch size 128, horizon 21, window 21
+154/154 [==============================] - 0s 2ms/step
+154/154 [==============================] - 0s 2ms/step
+154/154 [==============================] - 0s 2ms/step
+MSE: 292818689.8136317
+Entrenando modelo con 10 neuronas, dropout 0.6, batch size 16, horizon 21, window 21
+154/154 [==============================] - 0s 2ms/step
+154/154 [==============================] - 0s 2ms/step
+154/154 [==============================] - 0s 2ms/step
+MSE: 98287736.66368331
+Entrenando modelo con 10 neuronas, dropout 0.6, batch size 32, horizon 21, window 21
+154/154 [==============================] - 0s 2ms/step
+154/154 [==============================] - 0s 2ms/step
+154/154 [==============================] - 0s 2ms/step
+MSE: 248266492.8097953
+Entrenando modelo con 10 neuronas, dropout 0.6, batch size 64, horizon 21, window 21
+154/154 [==============================] - 0s 2ms/step
+154/154 [==============================] - 0s 2ms/step
+154/154 [==============================] - 0s 2ms/step
+MSE: 290029607.1649993
+Entrenando modelo con 10 neuronas, dropout 0.6, batch size 128, horizon 21, window 21
+154/154 [==============================] - 0s 2ms/step
+154/154 [==============================] - 0s 2ms/step
+154/154 [==============================] - 0s 2ms/step
+MSE: 314888040.0752115
+Entrenando modelo con 10 neuronas, dropout 0.8, batch size 16, horizon 21, window 21
+154/154 [==============================] - 0s 2ms/step
+154/154 [==============================] - 0s 2ms/step
+154/154 [==============================] - 0s 2ms/step
+MSE: 279831714.4607852
+Entrenando modelo con 10 neuronas, dropout 0.8, batch size 32, horizon 21, window 21
+154/154 [==============================] - 0s 2ms/step
+154/154 [==============================] - 0s 2ms/step
+154/154 [==============================] - 0s 2ms/step
+MSE: 264244222.3291754
+Entrenando modelo con 10 neuronas, dropout 0.8, batch size 64, horizon 21, window 21
+154/154 [==============================] - 0s 2ms/step
+154/154 [==============================] - 0s 2ms/step
+154/154 [==============================] - 0s 2ms/step
+MSE: 291583658.921641
+Entrenando modelo con 10 neuronas, dropout 0.8, batch size 128, horizon 21, window 21
+154/154 [==============================] - 0s 2ms/step
+154/154 [==============================] - 0s 2ms/step
+154/154 [==============================] - 0s 2ms/step
+MSE: 327970971.6865819
+Entrenando modelo con 10 neuronas, dropout 0.2, batch size 16, horizon 28, window 28
+153/153 [==============================] - 0s 2ms/step
+153/153 [==============================] - 0s 2ms/step
+153/153 [==============================] - 0s 2ms/step
+MSE: 9399850.328404287
+Entrenando modelo con 10 neuronas, dropout 0.2, batch size 32, horizon 28, window 28
+153/153 [==============================] - 0s 2ms/step
+153/153 [==============================] - 0s 3ms/step
+153/153 [==============================] - 0s 3ms/step
+MSE: 80568755.44853841
+Entrenando modelo con 10 neuronas, dropout 0.2, batch size 64, horizon 28, window 28
+153/153 [==============================] - 1s 3ms/step
+153/153 [==============================] - 0s 2ms/step
+153/153 [==============================] - 0s 3ms/step
+MSE: 266269614.58747455
+Entrenando modelo con 10 neuronas, dropout 0.2, batch size 128, horizon 28, window 28
+153/153 [==============================] - 0s 2ms/step
+153/153 [==============================] - 0s 2ms/step
+153/153 [==============================] - 0s 2ms/step
+MSE: 318953649.3301948
+Entrenando modelo con 10 neuronas, dropout 0.4, batch size 16, horizon 28, window 28
+153/153 [==============================] - 0s 2ms/step
+153/153 [==============================] - 0s 2ms/step
+153/153 [==============================] - 0s 2ms/step
+MSE: 57192815.0119131
+Entrenando modelo con 10 neuronas, dropout 0.4, batch size 32, horizon 28, window 28
+153/153 [==============================] - 0s 2ms/step
+153/153 [==============================] - 0s 2ms/step
+153/153 [==============================] - 0s 3ms/step
+MSE: 93548924.0573987
+Entrenando modelo con 10 neuronas, dropout 0.4, batch size 64, horizon 28, window 28
+153/153 [==============================] - 1s 3ms/step
+153/153 [==============================] - 0s 2ms/step
+153/153 [==============================] - 0s 2ms/step
+MSE: 242592877.02777085
+Entrenando modelo con 10 neuronas, dropout 0.4, batch size 128, horizon 28, window 28
+153/153 [==============================] - 0s 2ms/step
+153/153 [==============================] - 0s 2ms/step
+153/153 [==============================] - 0s 2ms/step
+MSE: 316535837.58713466
+Entrenando modelo con 10 neuronas, dropout 0.6, batch size 16, horizon 28, window 28
+153/153 [==============================] - 0s 2ms/step
+153/153 [==============================] - 0s 2ms/step
+153/153 [==============================] - 0s 2ms/step
+MSE: 68062610.5639379
+Entrenando modelo con 10 neuronas, dropout 0.6, batch size 32, horizon 28, window 28
+153/153 [==============================] - 0s 2ms/step
+153/153 [==============================] - 0s 2ms/step
+153/153 [==============================] - 0s 2ms/step
+MSE: 174603883.61991715
+Entrenando modelo con 10 neuronas, dropout 0.6, batch size 64, horizon 28, window 28
+153/153 [==============================] - 0s 2ms/step
+153/153 [==============================] - 0s 2ms/step
+153/153 [==============================] - 0s 2ms/step
+MSE: 261082530.4165518
+Entrenando modelo con 10 neuronas, dropout 0.6, batch size 128, horizon 28, window 28
+153/153 [==============================] - 1s 3ms/step
+153/153 [==============================] - 0s 2ms/step
+153/153 [==============================] - 0s 2ms/step
+MSE: 283817037.9583983
+Entrenando modelo con 10 neuronas, dropout 0.8, batch size 16, horizon 28, window 28
+153/153 [==============================] - 0s 2ms/step
+153/153 [==============================] - 0s 2ms/step
+153/153 [==============================] - 0s 2ms/step
+MSE: 174987356.0707187
+Entrenando modelo con 10 neuronas, dropout 0.8, batch size 32, horizon 28, window 28
+153/153 [==============================] - 0s 2ms/step
+153/153 [==============================] - 0s 3ms/step
+153/153 [==============================] - 0s 2ms/step
+MSE: 232370122.048521
+Entrenando modelo con 10 neuronas, dropout 0.8, batch size 64, horizon 28, window 28
+153/153 [==============================] - 0s 2ms/step
+153/153 [==============================] - 0s 2ms/step
+153/153 [==============================] - 0s 2ms/step
+MSE: 289239304.86880803
+Entrenando modelo con 10 neuronas, dropout 0.8, batch size 128, horizon 28, window 28
+153/153 [==============================] - 0s 2ms/step
+153/153 [==============================] - 0s 2ms/step
+153/153 [==============================] - 0s 2ms/step
+MSE: 339665647.5214435
+</pre></div>
+</div>
+</div>
+</div>
+<p>Para evitar el desgaste hemos dividido las iteraciones
+Según la optimización los mejores parametros son:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">params_best_model_price</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;neurons&#39;: 10,
+ &#39;batchsize&#39;: 16,
+ &#39;dropout_rate&#39;: 0.2,
+ &#39;horizon&#39;: 7,
+ &#39;window&#39;: 7,
+ &#39;MSE&#39;: 6246252.279987531}
+</pre></div>
+</div>
+</div>
+</div>
+<p>Guardaremos los datos relevantes de estas iteraciones, y luego haremos iteraciones con 1000 neuronas</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">guardar_resultados</span><span class="p">(</span>
+    <span class="n">validation_metrics_price</span><span class="p">,</span> <span class="n">test_metrics_price</span><span class="p">,</span> <span class="n">train_metrics_price</span><span class="p">,</span> 
+    <span class="n">residual_hist_price</span><span class="p">,</span> <span class="n">best_model_price</span><span class="p">,</span> <span class="n">params_best_model_price</span><span class="p">,</span> 
+    <span class="n">residuals_bestmodel_price</span><span class="p">,</span>
+    <span class="n">resultados</span>
+<span class="p">):</span>
+   
+    <span class="c1"># Hacer append de cada métrica en la lista correspondiente dentro del diccionario</span>
+    <span class="n">resultados</span><span class="p">[</span><span class="s1">&#39;validation_metrics_price&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">validation_metrics_price</span><span class="p">)</span>
+    <span class="n">resultados</span><span class="p">[</span><span class="s1">&#39;test_metrics_price&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">test_metrics_price</span><span class="p">)</span>
+    <span class="n">resultados</span><span class="p">[</span><span class="s1">&#39;train_metrics_price&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">train_metrics_price</span><span class="p">)</span>
+    <span class="n">resultados</span><span class="p">[</span><span class="s1">&#39;residual_hist_price&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">residual_hist_price</span><span class="p">)</span>
+    <span class="n">resultados</span><span class="p">[</span><span class="s1">&#39;best_model_price&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">best_model_price</span><span class="p">)</span>
+    <span class="n">resultados</span><span class="p">[</span><span class="s1">&#39;params_best_model_price&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">params_best_model_price</span><span class="p">)</span>
+    <span class="n">resultados</span><span class="p">[</span><span class="s1">&#39;residuals_bestmodel_price&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">residuals_bestmodel_price</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">resultados</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;validation_metrics_price&#39;</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="s1">&#39;test_metrics_price&#39;</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="s1">&#39;train_metrics_price&#39;</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="s1">&#39;residual_hist_price&#39;</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="s1">&#39;best_model_price&#39;</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="s1">&#39;params_best_model_price&#39;</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="s1">&#39;residuals_bestmodel_price&#39;</span><span class="p">:</span> <span class="p">[]</span>
+<span class="p">}</span>
+<span class="n">guardar_resultados</span><span class="p">(</span><span class="n">validation_metrics_price</span><span class="p">,</span><span class="n">test_metrics_price</span><span class="p">,</span><span class="n">train_metrics_price</span><span class="p">,</span><span class="n">residual_hist_price</span><span class="p">,</span><span class="n">best_model_price</span><span class="p">,</span><span class="n">params_best_model_price</span><span class="p">,</span><span class="n">residuals_bestmodel_price</span><span class="p">,</span><span class="n">resultados</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">windows</span><span class="o">=</span><span class="p">[</span><span class="mi">7</span><span class="p">,</span><span class="mi">14</span><span class="p">,</span><span class="mi">21</span><span class="p">,</span><span class="mi">28</span><span class="p">]</span>
+<span class="n">horizons</span><span class="o">=</span><span class="p">[</span><span class="mi">7</span><span class="p">,</span><span class="mi">14</span><span class="p">,</span><span class="mi">21</span><span class="p">,</span><span class="mi">28</span><span class="p">]</span>
+<span class="n">dropout_rates</span><span class="o">=</span><span class="p">[</span><span class="mf">0.2</span><span class="p">,</span><span class="mf">0.4</span><span class="p">,</span><span class="mf">0.6</span><span class="p">,</span><span class="mf">0.8</span><span class="p">]</span>
+<span class="n">batchsizes</span><span class="o">=</span><span class="p">[</span><span class="mi">16</span><span class="p">,</span><span class="mi">32</span><span class="p">,</span><span class="mi">64</span><span class="p">,</span><span class="mi">128</span><span class="p">]</span>
+<span class="n">neurons_list</span><span class="o">=</span><span class="p">[</span><span class="mi">1000</span><span class="p">]</span>
+
+
+<span class="n">datos</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Price&#39;</span><span class="p">]</span>
+<span class="n">validation_metrics_price</span><span class="p">,</span><span class="n">test_metrics_price</span><span class="p">,</span><span class="n">train_metrics_price</span><span class="p">,</span><span class="n">residual_hist_price</span><span class="p">,</span><span class="n">best_model_price</span><span class="p">,</span><span class="n">params_best_model_price</span><span class="p">,</span><span class="n">residuals_bestmodel_price</span><span class="o">=</span><span class="n">busqueda</span> <span class="p">(</span><span class="n">datos</span><span class="p">,</span><span class="n">windows</span><span class="p">,</span><span class="n">horizons</span><span class="p">,</span><span class="n">dropout_rates</span><span class="p">,</span><span class="n">batchsizes</span><span class="p">,</span><span class="n">neurons_list</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Entrenando modelo con 1000 neuronas, dropout 0.2, batch size 16, horizon 7, window 7
+156/156 [==============================] - 2s 15ms/step
+156/156 [==============================] - 2s 15ms/step
+156/156 [==============================] - 2s 15ms/step
+MSE: 5635618.415696868
+Entrenando modelo con 1000 neuronas, dropout 0.2, batch size 32, horizon 7, window 7
+156/156 [==============================] - 3s 16ms/step
+156/156 [==============================] - 2s 16ms/step
+156/156 [==============================] - 2s 16ms/step
+MSE: 3640202.588340754
+Entrenando modelo con 1000 neuronas, dropout 0.2, batch size 64, horizon 7, window 7
+156/156 [==============================] - 3s 17ms/step
+156/156 [==============================] - 3s 17ms/step
+156/156 [==============================] - 3s 17ms/step
+MSE: 2779506.0117820096
+Entrenando modelo con 1000 neuronas, dropout 0.2, batch size 128, horizon 7, window 7
+156/156 [==============================] - 3s 17ms/step
+156/156 [==============================] - 3s 17ms/step
+156/156 [==============================] - 3s 17ms/step
+MSE: 2878977.635523868
+Fluctuación menor al 5% en el MSE por 1 iteración(es).
+Entrenando modelo con 1000 neuronas, dropout 0.4, batch size 16, horizon 7, window 7
+156/156 [==============================] - 3s 17ms/step
+156/156 [==============================] - 3s 17ms/step
+156/156 [==============================] - 3s 17ms/step
+MSE: 4561515.654465702
+Entrenando modelo con 1000 neuronas, dropout 0.4, batch size 32, horizon 7, window 7
+156/156 [==============================] - 3s 17ms/step
+156/156 [==============================] - 3s 16ms/step
+156/156 [==============================] - 3s 16ms/step
+MSE: 2770312.9532707077
+Entrenando modelo con 1000 neuronas, dropout 0.4, batch size 64, horizon 7, window 7
+156/156 [==============================] - 3s 16ms/step
+156/156 [==============================] - 3s 17ms/step
+156/156 [==============================] - 3s 16ms/step
+MSE: 3299971.6104970193
+Entrenando modelo con 1000 neuronas, dropout 0.4, batch size 128, horizon 7, window 7
+156/156 [==============================] - 3s 18ms/step
+156/156 [==============================] - 3s 16ms/step
+156/156 [==============================] - 3s 16ms/step
+MSE: 5885590.174698705
+Entrenando modelo con 1000 neuronas, dropout 0.6, batch size 16, horizon 7, window 7
+156/156 [==============================] - 3s 16ms/step
+156/156 [==============================] - 3s 16ms/step
+156/156 [==============================] - 3s 17ms/step
+MSE: 2604637.0266452082
+Entrenando modelo con 1000 neuronas, dropout 0.6, batch size 32, horizon 7, window 7
+156/156 [==============================] - 3s 16ms/step
+156/156 [==============================] - 3s 16ms/step
+156/156 [==============================] - 2s 16ms/step
+MSE: 3759261.9479266736
+Entrenando modelo con 1000 neuronas, dropout 0.6, batch size 64, horizon 7, window 7
+156/156 [==============================] - 3s 18ms/step
+156/156 [==============================] - 2s 16ms/step
+156/156 [==============================] - 2s 16ms/step
+MSE: 2821664.6015534913
+Entrenando modelo con 1000 neuronas, dropout 0.6, batch size 128, horizon 7, window 7
+156/156 [==============================] - 2s 15ms/step
+156/156 [==============================] - 2s 14ms/step
+156/156 [==============================] - 2s 15ms/step
+MSE: 3196636.4773193575
+Entrenando modelo con 1000 neuronas, dropout 0.8, batch size 16, horizon 7, window 7
+156/156 [==============================] - 2s 15ms/step
+156/156 [==============================] - 2s 14ms/step
+156/156 [==============================] - 2s 14ms/step
+MSE: 4773895.094825978
+Entrenando modelo con 1000 neuronas, dropout 0.8, batch size 32, horizon 7, window 7
+156/156 [==============================] - 2s 14ms/step
+156/156 [==============================] - 2s 14ms/step
+156/156 [==============================] - 2s 14ms/step
+MSE: 4739262.229155926
+Fluctuación menor al 5% en el MSE por 1 iteración(es).
+Entrenando modelo con 1000 neuronas, dropout 0.8, batch size 64, horizon 7, window 7
+156/156 [==============================] - 2s 15ms/step
+156/156 [==============================] - 2s 15ms/step
+156/156 [==============================] - 2s 15ms/step
+MSE: 2914972.4942395277
+Entrenando modelo con 1000 neuronas, dropout 0.8, batch size 128, horizon 7, window 7
+156/156 [==============================] - 2s 15ms/step
+156/156 [==============================] - 2s 15ms/step
+156/156 [==============================] - 2s 15ms/step
+MSE: 2858053.503660154
+Fluctuación menor al 5% en el MSE por 1 iteración(es).
+Entrenando modelo con 1000 neuronas, dropout 0.2, batch size 16, horizon 14, window 14
+155/155 [==============================] - 5s 32ms/step
+155/155 [==============================] - 5s 32ms/step
+155/155 [==============================] - 5s 32ms/step
+MSE: 5519284.107733252
+Entrenando modelo con 1000 neuronas, dropout 0.2, batch size 32, horizon 14, window 14
+155/155 [==============================] - 5s 31ms/step
+155/155 [==============================] - 5s 32ms/step
+155/155 [==============================] - 5s 31ms/step
+MSE: 4849704.847750393
+Entrenando modelo con 1000 neuronas, dropout 0.2, batch size 64, horizon 14, window 14
+155/155 [==============================] - 5s 31ms/step
+155/155 [==============================] - 5s 30ms/step
+155/155 [==============================] - 5s 31ms/step
+MSE: 6831996.153837724
+Entrenando modelo con 1000 neuronas, dropout 0.2, batch size 128, horizon 14, window 14
+155/155 [==============================] - 5s 31ms/step
+155/155 [==============================] - 5s 31ms/step
+155/155 [==============================] - 5s 31ms/step
+MSE: 4687681.725578276
+Entrenando modelo con 1000 neuronas, dropout 0.4, batch size 16, horizon 14, window 14
+155/155 [==============================] - 5s 30ms/step
+155/155 [==============================] - 5s 31ms/step
+155/155 [==============================] - 5s 30ms/step
+MSE: 6247487.932650717
+Entrenando modelo con 1000 neuronas, dropout 0.4, batch size 32, horizon 14, window 14
+155/155 [==============================] - 5s 30ms/step
+155/155 [==============================] - 5s 31ms/step
+155/155 [==============================] - 5s 30ms/step
+MSE: 6211639.07933227
+Fluctuación menor al 5% en el MSE por 1 iteración(es).
+Entrenando modelo con 1000 neuronas, dropout 0.4, batch size 64, horizon 14, window 14
+155/155 [==============================] - 5s 32ms/step
+155/155 [==============================] - 5s 32ms/step
+155/155 [==============================] - 5s 31ms/step
+MSE: 4664268.402958018
+Entrenando modelo con 1000 neuronas, dropout 0.4, batch size 128, horizon 14, window 14
+155/155 [==============================] - 5s 31ms/step
+155/155 [==============================] - 5s 31ms/step
+155/155 [==============================] - 5s 31ms/step
+MSE: 5200444.641379311
+Entrenando modelo con 1000 neuronas, dropout 0.6, batch size 16, horizon 14, window 14
+155/155 [==============================] - 5s 31ms/step
+155/155 [==============================] - 5s 32ms/step
+155/155 [==============================] - 5s 31ms/step
+MSE: 6077131.599065108
+Entrenando modelo con 1000 neuronas, dropout 0.6, batch size 32, horizon 14, window 14
+155/155 [==============================] - 5s 30ms/step
+155/155 [==============================] - 5s 31ms/step
+155/155 [==============================] - 5s 30ms/step
+MSE: 4697162.479024079
+Entrenando modelo con 1000 neuronas, dropout 0.6, batch size 64, horizon 14, window 14
+155/155 [==============================] - 5s 30ms/step
+155/155 [==============================] - 5s 31ms/step
+155/155 [==============================] - 5s 30ms/step
+MSE: 7859109.953809294
+Entrenando modelo con 1000 neuronas, dropout 0.6, batch size 128, horizon 14, window 14
+155/155 [==============================] - 5s 31ms/step
+155/155 [==============================] - 5s 31ms/step
+155/155 [==============================] - 5s 31ms/step
+MSE: 5861457.02372283
+Entrenando modelo con 1000 neuronas, dropout 0.8, batch size 16, horizon 14, window 14
+155/155 [==============================] - 5s 31ms/step
+155/155 [==============================] - 5s 31ms/step
+155/155 [==============================] - 5s 31ms/step
+MSE: 9559502.722733827
+Entrenando modelo con 1000 neuronas, dropout 0.8, batch size 32, horizon 14, window 14
+155/155 [==============================] - 5s 30ms/step
+155/155 [==============================] - 5s 31ms/step
+155/155 [==============================] - 5s 30ms/step
+MSE: 4226651.46049621
+Entrenando modelo con 1000 neuronas, dropout 0.8, batch size 64, horizon 14, window 14
+155/155 [==============================] - 5s 29ms/step
+155/155 [==============================] - 5s 30ms/step
+155/155 [==============================] - 5s 30ms/step
+MSE: 4457006.14908902
+Entrenando modelo con 1000 neuronas, dropout 0.8, batch size 128, horizon 14, window 14
+155/155 [==============================] - 5s 29ms/step
+155/155 [==============================] - 5s 30ms/step
+155/155 [==============================] - 5s 29ms/step
+MSE: 10534818.263118297
+Entrenando modelo con 1000 neuronas, dropout 0.2, batch size 16, horizon 21, window 21
+154/154 [==============================] - 7s 48ms/step
+154/154 [==============================] - 7s 47ms/step
+154/154 [==============================] - 7s 47ms/step
+MSE: 6692140.978103188
+Entrenando modelo con 1000 neuronas, dropout 0.2, batch size 32, horizon 21, window 21
+154/154 [==============================] - 7s 45ms/step
+154/154 [==============================] - 7s 46ms/step
+154/154 [==============================] - 7s 45ms/step
+MSE: 13473871.04927
+Entrenando modelo con 1000 neuronas, dropout 0.2, batch size 64, horizon 21, window 21
+154/154 [==============================] - 7s 45ms/step
+154/154 [==============================] - 7s 46ms/step
+154/154 [==============================] - 7s 45ms/step
+MSE: 16831089.789323974
+Entrenando modelo con 1000 neuronas, dropout 0.2, batch size 128, horizon 21, window 21
+154/154 [==============================] - 7s 44ms/step
+154/154 [==============================] - 7s 44ms/step
+154/154 [==============================] - 7s 44ms/step
+MSE: 7100956.589285338
+Entrenando modelo con 1000 neuronas, dropout 0.4, batch size 16, horizon 21, window 21
+154/154 [==============================] - 7s 43ms/step
+154/154 [==============================] - 7s 44ms/step
+154/154 [==============================] - 7s 44ms/step
+MSE: 10802161.049090931
+Entrenando modelo con 1000 neuronas, dropout 0.4, batch size 32, horizon 21, window 21
+154/154 [==============================] - 7s 45ms/step
+154/154 [==============================] - 7s 44ms/step
+154/154 [==============================] - 7s 44ms/step
+MSE: 6245352.772185968
+Entrenando modelo con 1000 neuronas, dropout 0.4, batch size 64, horizon 21, window 21
+154/154 [==============================] - 7s 43ms/step
+154/154 [==============================] - 7s 43ms/step
+154/154 [==============================] - 7s 43ms/step
+MSE: 7118040.60472746
+Entrenando modelo con 1000 neuronas, dropout 0.4, batch size 128, horizon 21, window 21
+154/154 [==============================] - 7s 42ms/step
+154/154 [==============================] - 7s 43ms/step
+154/154 [==============================] - 6s 42ms/step
+MSE: 9108255.005824156
+Entrenando modelo con 1000 neuronas, dropout 0.6, batch size 16, horizon 21, window 21
+154/154 [==============================] - 7s 43ms/step
+154/154 [==============================] - 7s 43ms/step
+154/154 [==============================] - 7s 42ms/step
+MSE: 6632621.387976368
+Entrenando modelo con 1000 neuronas, dropout 0.6, batch size 32, horizon 21, window 21
+154/154 [==============================] - 7s 42ms/step
+154/154 [==============================] - 6s 42ms/step
+154/154 [==============================] - 7s 43ms/step
+MSE: 9601554.403109688
+Entrenando modelo con 1000 neuronas, dropout 0.6, batch size 64, horizon 21, window 21
+154/154 [==============================] - 7s 43ms/step
+154/154 [==============================] - 7s 43ms/step
+154/154 [==============================] - 7s 43ms/step
+MSE: 6541728.58343475
+Entrenando modelo con 1000 neuronas, dropout 0.6, batch size 128, horizon 21, window 21
+154/154 [==============================] - 7s 42ms/step
+154/154 [==============================] - 7s 44ms/step
+154/154 [==============================] - 7s 43ms/step
+MSE: 136454564.4973437
+Entrenando modelo con 1000 neuronas, dropout 0.8, batch size 16, horizon 21, window 21
+154/154 [==============================] - 7s 43ms/step
+154/154 [==============================] - 7s 42ms/step
+154/154 [==============================] - 7s 44ms/step
+MSE: 8291842.032028733
+Entrenando modelo con 1000 neuronas, dropout 0.8, batch size 32, horizon 21, window 21
+154/154 [==============================] - 7s 46ms/step
+154/154 [==============================] - 7s 45ms/step
+154/154 [==============================] - 7s 45ms/step
+MSE: 6884000.3518067
+Entrenando modelo con 1000 neuronas, dropout 0.8, batch size 64, horizon 21, window 21
+154/154 [==============================] - 7s 47ms/step
+154/154 [==============================] - 7s 48ms/step
+154/154 [==============================] - 7s 47ms/step
+MSE: 6472621.997693431
+Entrenando modelo con 1000 neuronas, dropout 0.8, batch size 128, horizon 21, window 21
+154/154 [==============================] - 7s 46ms/step
+154/154 [==============================] - 7s 47ms/step
+154/154 [==============================] - 7s 48ms/step
+MSE: 12472444.25407649
+Entrenando modelo con 1000 neuronas, dropout 0.2, batch size 16, horizon 28, window 28
+153/153 [==============================] - 10s 62ms/step
+153/153 [==============================] - 10s 62ms/step
+153/153 [==============================] - 9s 61ms/step
+MSE: 21621179.316002835
+Entrenando modelo con 1000 neuronas, dropout 0.2, batch size 32, horizon 28, window 28
+153/153 [==============================] - 9s 61ms/step
+153/153 [==============================] - 10s 63ms/step
+153/153 [==============================] - 9s 62ms/step
+MSE: 8376743.482851548
+Entrenando modelo con 1000 neuronas, dropout 0.2, batch size 64, horizon 28, window 28
+153/153 [==============================] - 10s 66ms/step
+153/153 [==============================] - 10s 65ms/step
+153/153 [==============================] - 9s 62ms/step
+MSE: 8151930.319773821
+Fluctuación menor al 5% en el MSE por 1 iteración(es).
+Entrenando modelo con 1000 neuronas, dropout 0.2, batch size 128, horizon 28, window 28
+153/153 [==============================] - 10s 61ms/step
+153/153 [==============================] - 9s 61ms/step
+153/153 [==============================] - 9s 61ms/step
+MSE: 81356570.66750558
+Entrenando modelo con 1000 neuronas, dropout 0.4, batch size 16, horizon 28, window 28
+153/153 [==============================] - 9s 61ms/step
+153/153 [==============================] - 9s 61ms/step
+153/153 [==============================] - 9s 61ms/step
+MSE: 7354212.75854917
+Entrenando modelo con 1000 neuronas, dropout 0.4, batch size 32, horizon 28, window 28
+153/153 [==============================] - 9s 61ms/step
+153/153 [==============================] - 9s 61ms/step
+153/153 [==============================] - 9s 61ms/step
+MSE: 9493872.23709883
+Entrenando modelo con 1000 neuronas, dropout 0.4, batch size 64, horizon 28, window 28
+153/153 [==============================] - 9s 61ms/step
+153/153 [==============================] - 9s 61ms/step
+153/153 [==============================] - 9s 61ms/step
+MSE: 8585953.314262664
+Entrenando modelo con 1000 neuronas, dropout 0.4, batch size 128, horizon 28, window 28
+153/153 [==============================] - 9s 61ms/step
+153/153 [==============================] - 9s 61ms/step
+153/153 [==============================] - 9s 61ms/step
+MSE: 57749625.35495358
+Entrenando modelo con 1000 neuronas, dropout 0.6, batch size 16, horizon 28, window 28
+153/153 [==============================] - 9s 61ms/step
+153/153 [==============================] - 9s 60ms/step
+153/153 [==============================] - 9s 61ms/step
+MSE: 13275721.619112661
+Entrenando modelo con 1000 neuronas, dropout 0.6, batch size 32, horizon 28, window 28
+153/153 [==============================] - 9s 60ms/step
+153/153 [==============================] - 9s 60ms/step
+153/153 [==============================] - 9s 60ms/step
+MSE: 11009157.756542435
+Entrenando modelo con 1000 neuronas, dropout 0.6, batch size 64, horizon 28, window 28
+153/153 [==============================] - 9s 60ms/step
+153/153 [==============================] - 9s 61ms/step
+153/153 [==============================] - 9s 61ms/step
+MSE: 28703877.219180558
+Entrenando modelo con 1000 neuronas, dropout 0.6, batch size 128, horizon 28, window 28
+153/153 [==============================] - 9s 61ms/step
+153/153 [==============================] - 9s 61ms/step
+153/153 [==============================] - 9s 61ms/step
+MSE: 18807724.779337328
+Entrenando modelo con 1000 neuronas, dropout 0.8, batch size 16, horizon 28, window 28
+153/153 [==============================] - 10s 62ms/step
+153/153 [==============================] - 9s 62ms/step
+153/153 [==============================] - 9s 62ms/step
+MSE: 17366579.760382514
+Entrenando modelo con 1000 neuronas, dropout 0.8, batch size 32, horizon 28, window 28
+153/153 [==============================] - 10s 62ms/step
+153/153 [==============================] - 9s 62ms/step
+153/153 [==============================] - 9s 62ms/step
+MSE: 7481899.251019001
+Entrenando modelo con 1000 neuronas, dropout 0.8, batch size 64, horizon 28, window 28
+153/153 [==============================] - 10s 63ms/step
+153/153 [==============================] - 10s 63ms/step
+153/153 [==============================] - 10s 62ms/step
+MSE: 14347357.169028755
+Entrenando modelo con 1000 neuronas, dropout 0.8, batch size 128, horizon 28, window 28
+153/153 [==============================] - 10s 62ms/step
+153/153 [==============================] - 10s 63ms/step
+153/153 [==============================] - 9s 61ms/step
+MSE: 19018601.937489185
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">params_best_model_price</span><span class="p">)</span>
+<span class="n">guardar_resultados</span><span class="p">(</span><span class="n">validation_metrics_price</span><span class="p">,</span><span class="n">test_metrics_price</span><span class="p">,</span><span class="n">train_metrics_price</span><span class="p">,</span><span class="n">residual_hist_price</span><span class="p">,</span><span class="n">best_model_price</span><span class="p">,</span><span class="n">params_best_model_price</span><span class="p">,</span><span class="n">residuals_bestmodel_price</span><span class="p">,</span><span class="n">resultados</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;neurons&#39;: 1000, &#39;batchsize&#39;: 16, &#39;dropout_rate&#39;: 0.6, &#39;horizon&#39;: 7, &#39;window&#39;: 7, &#39;MSE&#39;: 2604637.0266452082}
+</pre></div>
+</div>
+</div>
+</div>
+<p>De esta iteración podemos ver que a mayor neuronas se logró un mejor resultado del mse. Además coincide el tamaño de las ventanas y el batch size. por lo que para la siguientes iteraciones utilizaremos los siguientes parametros:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">windows</span><span class="o">=</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span>
+<span class="n">horizons</span><span class="o">=</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span>
+<span class="n">dropout_rates</span><span class="o">=</span><span class="p">[</span><span class="mf">0.2</span><span class="p">,</span><span class="mf">0.6</span><span class="p">]</span>
+<span class="n">batchsizes</span><span class="o">=</span><span class="p">[</span><span class="mi">16</span><span class="p">]</span>
+<span class="n">neurons_list</span><span class="o">=</span><span class="p">[</span><span class="mi">10000</span><span class="p">]</span>
+
+
+<span class="n">datos</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Price&#39;</span><span class="p">]</span>
+<span class="n">validation_metrics_price</span><span class="p">,</span><span class="n">test_metrics_price</span><span class="p">,</span><span class="n">train_metrics_price</span><span class="p">,</span><span class="n">residual_hist_price</span><span class="p">,</span><span class="n">best_model_price</span><span class="p">,</span><span class="n">params_best_model_price</span><span class="p">,</span><span class="n">residuals_bestmodel_price</span><span class="o">=</span><span class="n">busqueda</span> <span class="p">(</span><span class="n">datos</span><span class="p">,</span><span class="n">windows</span><span class="p">,</span><span class="n">horizons</span><span class="p">,</span><span class="n">dropout_rates</span><span class="p">,</span><span class="n">batchsizes</span><span class="p">,</span><span class="n">neurons_list</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Entrenando modelo con 10000 neuronas, dropout 0.2, batch size 16, horizon 7, window 7
+156/156 [==============================] - 127s 810ms/step
+156/156 [==============================] - 124s 797ms/step
+156/156 [==============================] - 125s 799ms/step
+MSE: 5703626.514858782
+Entrenando modelo con 10000 neuronas, dropout 0.6, batch size 16, horizon 7, window 7
+156/156 [==============================] - 126s 805ms/step
+156/156 [==============================] - 126s 805ms/step
+156/156 [==============================] - 126s 806ms/step
+MSE: 6302349.674454486
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">params_best_model_price</span><span class="p">)</span>
+<span class="n">guardar_resultados</span><span class="p">(</span><span class="n">validation_metrics_price</span><span class="p">,</span><span class="n">test_metrics_price</span><span class="p">,</span><span class="n">train_metrics_price</span><span class="p">,</span><span class="n">residual_hist_price</span><span class="p">,</span><span class="n">best_model_price</span><span class="p">,</span><span class="n">params_best_model_price</span><span class="p">,</span><span class="n">residuals_bestmodel_price</span><span class="p">,</span><span class="n">resultados</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;neurons&#39;: 10000, &#39;batchsize&#39;: 16, &#39;dropout_rate&#39;: 0.2, &#39;horizon&#39;: 7, &#39;window&#39;: 7, &#39;MSE&#39;: 5703626.514858782}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">resultados</span><span class="p">[</span><span class="s1">&#39;params_best_model_price&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[{&#39;neurons&#39;: 10,
+  &#39;batchsize&#39;: 16,
+  &#39;dropout_rate&#39;: 0.2,
+  &#39;horizon&#39;: 7,
+  &#39;window&#39;: 7,
+  &#39;MSE&#39;: 6246252.279987531},
+ {&#39;neurons&#39;: 1000,
+  &#39;batchsize&#39;: 16,
+  &#39;dropout_rate&#39;: 0.6,
+  &#39;horizon&#39;: 7,
+  &#39;window&#39;: 7,
+  &#39;MSE&#39;: 2604637.0266452082},
+ {&#39;neurons&#39;: 1000,
+  &#39;batchsize&#39;: 16,
+  &#39;dropout_rate&#39;: 0.6,
+  &#39;horizon&#39;: 7,
+  &#39;window&#39;: 7,
+  &#39;MSE&#39;: 2604637.0266452082},
+ {&#39;neurons&#39;: 10000,
+  &#39;batchsize&#39;: 16,
+  &#39;dropout_rate&#39;: 0.2,
+  &#39;horizon&#39;: 7,
+  &#39;window&#39;: 7,
+  &#39;MSE&#39;: 5703626.514858782}]
+</pre></div>
+</div>
+</div>
+</div>
+<p>De las iteraciones podemos determinar que el mejor modelo es
+neurons’: 1000,
+‘batchsize’: 16,
+‘dropout_rate’: 0.6,
+‘horizon’: 7,
+‘window’: 7,
+con
+‘MSE’: 2604637.0266452082</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">statsmodels.stats.diagnostic</span> <span class="kn">import</span> <span class="n">acorr_ljungbox</span>
+<span class="kn">from</span> <span class="nn">statsmodels.graphics.gofplots</span> <span class="kn">import</span> <span class="n">qqplot</span>
+<span class="kn">from</span> <span class="nn">statsmodels.tsa.stattools</span> <span class="kn">import</span> <span class="n">acf</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="residuales">
+<h2>Residuales<a class="headerlink" href="#residuales" title="Link to this heading">#</a></h2>
+<p>tomamos los residuos del mejor modelo para su evaluación y analisamos los residuales de cada ventana, además se mostraran las graficas para 5 ventanas aleatorias</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">res</span><span class="o">=</span><span class="n">resultados</span><span class="p">[</span><span class="s1">&#39;residuals_bestmodel_price&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ljung_box_pvalues</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">ventana</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">res</span><span class="p">):</span>
+    <span class="n">ventana</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ventana</span><span class="p">)</span>
+    <span class="n">ljung_box_pvalue</span> <span class="o">=</span> <span class="n">acorr_ljungbox</span><span class="p">(</span><span class="n">ventana</span><span class="p">,</span> <span class="n">lags</span><span class="o">=</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span> <span class="n">return_df</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="s1">&#39;lb_pvalue&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ljung_box_pvalues</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ljung_box_pvalue</span><span class="p">)</span>
+<span class="n">df_resultados</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;Ventana&#39;</span><span class="p">:</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="s1">&#39;LJung-Box (p-value)&#39;</span><span class="p">:</span> <span class="n">ljung_box_pvalues</span>
+<span class="p">})</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">df_resultados</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+<span class="c1"># Seleccionar una muestra aleatoria de 5 ventanas para graficar</span>
+<span class="n">muestras</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">muestras</span><span class="p">:</span>
+    <span class="n">ventana</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+    
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ventana</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Serie de Residuos - Ventana </span><span class="si">{</span><span class="n">idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Índice&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Residuos&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+    
+    <span class="n">qqplot</span><span class="p">(</span><span class="n">ventana</span><span class="p">,</span> <span class="n">line</span><span class="o">=</span><span class="s1">&#39;s&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;QQPlot - Ventana </span><span class="si">{</span><span class="n">idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+    
+    <span class="n">acf_vals</span> <span class="o">=</span> <span class="n">acf</span><span class="p">(</span><span class="n">ventana</span><span class="p">,</span> <span class="n">nlags</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">ventana</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">acf_vals</span><span class="p">)),</span> <span class="n">acf_vals</span><span class="p">,</span> <span class="n">use_line_collection</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;ACF de Residuos - Ventana </span><span class="si">{</span><span class="n">idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Lags&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Autocorrelación&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>   Ventana  LJung-Box (p-value)
+0        1             0.558364
+1        2             0.558364
+2        3             0.558364
+3        4             0.558364
+4        5             0.558364
+5        6             0.558364
+6        7             0.558364
+7        8             0.558364
+8        9             0.558364
+9       10             0.558364
+</pre></div>
+</div>
+<img alt="_images/bc32c1f93a5716857744ae383f1f9201ef832b90b909a6bd52895077a4782662.png" src="_images/bc32c1f93a5716857744ae383f1f9201ef832b90b909a6bd52895077a4782662.png" />
+<img alt="_images/006ad751b0c796be52caf02644657504e2cee5ec244590921ee090dcf493a062.png" src="_images/006ad751b0c796be52caf02644657504e2cee5ec244590921ee090dcf493a062.png" />
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\claud\AppData\Local\Temp\ipykernel_12348\1560686776.py:34: MatplotlibDeprecationWarning:
+
+The &#39;use_line_collection&#39; parameter of stem() was deprecated in Matplotlib 3.6 and will be removed two minor releases later. If any parameter follows &#39;use_line_collection&#39;, they should be passed as keyword, not positionally.
+</pre></div>
+</div>
+<img alt="_images/83cacb9418ad6d94c8f1c0d9a3950385c44fa71cd9016ce86281404d56cc884a.png" src="_images/83cacb9418ad6d94c8f1c0d9a3950385c44fa71cd9016ce86281404d56cc884a.png" />
+<img alt="_images/e4a6554c70b5d2f185ac2b8087332ad311c6218c2fda8555741665f7d1c93757.png" src="_images/e4a6554c70b5d2f185ac2b8087332ad311c6218c2fda8555741665f7d1c93757.png" />
+<img alt="_images/577583f496f0601c1135489a8ccb6561d8e89b1b8a74a406201cd6d34b321886.png" src="_images/577583f496f0601c1135489a8ccb6561d8e89b1b8a74a406201cd6d34b321886.png" />
+<img alt="_images/9b497a9f41294cf9d1d23a27a0a295396fa0e2db9f065d982e9f52bbc9383fd4.png" src="_images/9b497a9f41294cf9d1d23a27a0a295396fa0e2db9f065d982e9f52bbc9383fd4.png" />
+<img alt="_images/abdd53022a47de78099233c5ac46fb2be179c68ffb1c32456df2e3c38f8d7350.png" src="_images/abdd53022a47de78099233c5ac46fb2be179c68ffb1c32456df2e3c38f8d7350.png" />
+<img alt="_images/8850db36c7e56aba1a8ea92297e28a993ee8aeae70a5eecfaf5c2ca4c534dd84.png" src="_images/8850db36c7e56aba1a8ea92297e28a993ee8aeae70a5eecfaf5c2ca4c534dd84.png" />
+<img alt="_images/103eaa2a7a7ed835fc98662e170fe07d37b0dd98ef9d680ae6804acbab8a2a47.png" src="_images/103eaa2a7a7ed835fc98662e170fe07d37b0dd98ef9d680ae6804acbab8a2a47.png" />
+<img alt="_images/58d725a2e33d14df0fdbf1f8576e365ea13668ca101aa8159ae7165131dcf122.png" src="_images/58d725a2e33d14df0fdbf1f8576e365ea13668ca101aa8159ae7165131dcf122.png" />
+<img alt="_images/f97f23690e6a13b9fc628c1f8105f144378c7ab291c5e631ed5ce743c94598c7.png" src="_images/f97f23690e6a13b9fc628c1f8105f144378c7ab291c5e631ed5ce743c94598c7.png" />
+<img alt="_images/efc1bcb8f8e852070a0b225c8ac53a0d3df28e4f707f28d886d14fe550c057b6.png" src="_images/efc1bcb8f8e852070a0b225c8ac53a0d3df28e4f707f28d886d14fe550c057b6.png" />
+<img alt="_images/eef9ec1e116edaabff768c42236f535dc39884f089cdc233ef36369be1b1a4c3.png" src="_images/eef9ec1e116edaabff768c42236f535dc39884f089cdc233ef36369be1b1a4c3.png" />
+<img alt="_images/3f129494db0657a9cbb87d6ea64470a0d5adb1ebc115601ebbd1270e12dbbb27.png" src="_images/3f129494db0657a9cbb87d6ea64470a0d5adb1ebc115601ebbd1270e12dbbb27.png" />
+<img alt="_images/1cf8d579c0e28d665d3facd35a6d4f76f702faf440ae63a43083fe30c94bc3b6.png" src="_images/1cf8d579c0e28d665d3facd35a6d4f76f702faf440ae63a43083fe30c94bc3b6.png" />
+</div>
+</div>
+<p>De los residuales podemos secir que no cumplen cumplen, no distribuyen normal, tienen asimetria, además no son independientes.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">metrics_list</span> <span class="o">=</span> <span class="n">resultados</span><span class="p">[</span><span class="s1">&#39;validation_metrics_price&#39;</span><span class="p">]</span>  <span class="c1"># Lista que contiene los diccionarios</span>
+<span class="n">metricas</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">metrics_list</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">i</span><span class="p">:</span> 
+        
+        <span class="n">metricas</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">metricasval</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">metricas</span><span class="p">)</span>
+<span class="n">metricasval</span> <span class="o">=</span> <span class="n">metricasval</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
+<span class="n">metricasval</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>neurons</th>
+      <th>batchsize</th>
+      <th>Dropout</th>
+      <th>horizon</th>
+      <th>window</th>
+      <th>MAPE</th>
+      <th>MAE</th>
+      <th>MSE</th>
+      <th>RMSE</th>
+      <th>R2</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>10</td>
+      <td>16</td>
+      <td>0.2</td>
+      <td>7</td>
+      <td>7</td>
+      <td>18.656426</td>
+      <td>1192.405419</td>
+      <td>6.246252e+06</td>
+      <td>2499.250344</td>
+      <td>0.974773</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>10</td>
+      <td>32</td>
+      <td>0.2</td>
+      <td>7</td>
+      <td>7</td>
+      <td>27.314612</td>
+      <td>2472.740715</td>
+      <td>2.621720e+07</td>
+      <td>5120.273067</td>
+      <td>0.893640</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>10</td>
+      <td>64</td>
+      <td>0.2</td>
+      <td>7</td>
+      <td>7</td>
+      <td>71.423901</td>
+      <td>7808.077846</td>
+      <td>2.251976e+08</td>
+      <td>15006.586747</td>
+      <td>0.090227</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>10</td>
+      <td>128</td>
+      <td>0.2</td>
+      <td>7</td>
+      <td>7</td>
+      <td>77.933866</td>
+      <td>8510.015369</td>
+      <td>2.518416e+08</td>
+      <td>15869.516475</td>
+      <td>-0.019343</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>10</td>
+      <td>16</td>
+      <td>0.4</td>
+      <td>7</td>
+      <td>7</td>
+      <td>29.797139</td>
+      <td>2916.902959</td>
+      <td>3.517161e+07</td>
+      <td>5930.565794</td>
+      <td>0.857795</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>125</th>
+      <td>1000</td>
+      <td>32</td>
+      <td>0.8</td>
+      <td>28</td>
+      <td>28</td>
+      <td>16.069145</td>
+      <td>1175.212911</td>
+      <td>7.481899e+06</td>
+      <td>2735.306062</td>
+      <td>0.968281</td>
+    </tr>
+    <tr>
+      <th>126</th>
+      <td>1000</td>
+      <td>64</td>
+      <td>0.8</td>
+      <td>28</td>
+      <td>28</td>
+      <td>20.844901</td>
+      <td>1835.421206</td>
+      <td>1.434736e+07</td>
+      <td>3787.790539</td>
+      <td>0.939066</td>
+    </tr>
+    <tr>
+      <th>127</th>
+      <td>1000</td>
+      <td>128</td>
+      <td>0.8</td>
+      <td>28</td>
+      <td>28</td>
+      <td>23.708829</td>
+      <td>2034.309072</td>
+      <td>1.901860e+07</td>
+      <td>4361.032210</td>
+      <td>0.919068</td>
+    </tr>
+    <tr>
+      <th>192</th>
+      <td>10000</td>
+      <td>16</td>
+      <td>0.2</td>
+      <td>7</td>
+      <td>7</td>
+      <td>13.236866</td>
+      <td>1076.342128</td>
+      <td>5.703627e+06</td>
+      <td>2388.226646</td>
+      <td>0.976947</td>
+    </tr>
+    <tr>
+      <th>193</th>
+      <td>10000</td>
+      <td>16</td>
+      <td>0.6</td>
+      <td>7</td>
+      <td>7</td>
+      <td>14.739383</td>
+      <td>1139.591258</td>
+      <td>6.302350e+06</td>
+      <td>2510.448102</td>
+      <td>0.974530</td>
+    </tr>
+  </tbody>
+</table>
+<p>130 rows × 10 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">metricasval</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;MSE&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;MSE vs Índice&#39;</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;index&#39;</span><span class="p">:</span> <span class="s1">&#39;Índice&#39;</span><span class="p">,</span> <span class="s1">&#39;MSE&#39;</span><span class="p">:</span> <span class="s1">&#39;MSE&#39;</span><span class="p">})</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+</div>
+</div>
+<p>En esta figura podemos observar el MSE a lo largo de las iteraciones, vemos que a medida que se aumnetaron las neuronas el resultado mejoraba. Además delemitar la busqueda a partir de los parametros que ya se sabía que tenian buen desempeño permitió estabilizar la metrica.</p>
+<p>Ahora compararemos los errores en el entrenamiento, prueba y test con la metrica mape porque esta representa los errores de manera porcentual</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">metrics_list</span> <span class="o">=</span> <span class="n">resultados</span><span class="p">[</span><span class="s1">&#39;train_metrics_price&#39;</span><span class="p">]</span>  <span class="c1"># Lista que contiene los diccionarios</span>
+<span class="n">metricas_train</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">metrics_list</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">i</span><span class="p">:</span> 
+        
+        <span class="n">metricas_train</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+<span class="n">metricas_train</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">metricas_train</span><span class="p">)</span>
+<span class="n">metricas_train</span> <span class="o">=</span> <span class="n">metricas_train</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">metrics_list</span> <span class="o">=</span> <span class="n">resultados</span><span class="p">[</span><span class="s1">&#39;test_metrics_price&#39;</span><span class="p">]</span>
+
+<span class="n">metricas_test</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">metrics_list</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">i</span><span class="p">:</span> 
+        
+        <span class="n">metricas_test</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+<span class="n">metricas_test</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">metricas_test</span><span class="p">)</span>
+<span class="n">metricas_test</span> <span class="o">=</span> <span class="n">metricas_test</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">errores_train</span> <span class="o">=</span>  <span class="n">metricas_train</span><span class="p">[</span><span class="s1">&#39;MAPE&#39;</span><span class="p">]</span>
+<span class="n">errores_val</span><span class="o">=</span>   <span class="n">metricasval</span><span class="p">[</span><span class="s1">&#39;MAPE&#39;</span><span class="p">]</span>
+<span class="n">errores_test</span> <span class="o">=</span>  <span class="n">metricas_test</span><span class="p">[</span><span class="s1">&#39;MAPE&#39;</span><span class="p">]</span>
+
+<span class="c1"># Crear una lista que contenga todas las listas de residuos</span>
+<span class="n">residuos</span> <span class="o">=</span> <span class="p">[</span><span class="n">errores_train</span><span class="p">,</span> <span class="n">errores_val</span><span class="p">,</span> <span class="n">errores_test</span><span class="p">]</span>
+
+<span class="c1"># Crear el Boxplot usando Seaborn</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">residuos</span><span class="p">)</span>
+
+<span class="c1"># Personalizar el gráfico</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Comparación de Residuos entre 3 Listas&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Lista&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Valor del Residuo&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">ticks</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Residuos train&#39;</span><span class="p">,</span> <span class="s1">&#39;Residuos val&#39;</span><span class="p">,</span> <span class="s1">&#39;Residuos test&#39;</span><span class="p">])</span>
+
+<span class="c1"># Mostrar el gráfico</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/3089ec6b7aedee35afbecf8f033dc94009e68f66b58a92fb6d75292fc55d8f61.png" src="_images/3089ec6b7aedee35afbecf8f033dc94009e68f66b58a92fb6d75292fc55d8f61.png" />
+</div>
+</div>
+<p>Las medianas son similares al igual que los las cajas porque al manejar la metodología de ventanas deslizantes los conjuntos son iguales a excepción de la primera y ultima ventana. sin embargo las medianas se van reduciendo porque el modelo aprende luego de evaluar el conjunto de validación</p>
+</section>
+<section id="prediciones">
+<h2>Prediciones<a class="headerlink" href="#prediciones" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mejormodelo</span><span class="o">=</span><span class="n">resultados</span><span class="p">[</span><span class="s1">&#39;best_model_price&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="n">X_val</span><span class="p">,</span> <span class="n">Y_val</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">Y_test</span><span class="o">=</span><span class="n">create_sliding_windows</span><span class="p">(</span><span class="n">datos</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+
+<span class="n">train</span><span class="o">=</span><span class="n">mejormodelo</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+<span class="n">val</span><span class="o">=</span><span class="n">mejormodelo</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_val</span><span class="p">)</span>
+<span class="n">test</span><span class="o">=</span><span class="n">mejormodelo</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>156/156 [==============================] - 4s 24ms/step
+156/156 [==============================] - 3s 20ms/step
+156/156 [==============================] - 3s 21ms/step
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">plotly.express</span> <span class="k">as</span> <span class="nn">px</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">train</span><span class="p">)</span>
+
+<span class="n">datos</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">values</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+        <span class="n">datos</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;Fila&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Fila </span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;Índice&quot;</span><span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">j</span><span class="p">,</span> <span class="s2">&quot;Valor&quot;</span><span class="p">:</span> <span class="n">value</span><span class="p">})</span>
+
+<span class="n">df_plot</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">datos</span><span class="p">)</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">line</span><span class="p">(</span>
+    <span class="n">df_plot</span><span class="p">,</span> 
+    <span class="n">x</span><span class="o">=</span><span class="s2">&quot;Índice&quot;</span><span class="p">,</span> 
+    <span class="n">y</span><span class="o">=</span><span class="s2">&quot;Valor&quot;</span><span class="p">,</span> 
+    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;Fila&quot;</span><span class="p">,</span> 
+    <span class="n">markers</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Gráfico de Filas del Array con Ventanas Superpuestas&quot;</span>
+<span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+</div>
+</div>
+<p>Aquí podemos ver la predicción de las ventanas para entrenamiento de manera independiente</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train_data</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">train</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+        <span class="n">train_data</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s2">&quot;Conjunto&quot;</span><span class="p">:</span> <span class="s2">&quot;Train&quot;</span><span class="p">,</span> 
+            <span class="s2">&quot;Índice&quot;</span><span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">j</span><span class="p">,</span> 
+            <span class="s2">&quot;Valor&quot;</span><span class="p">:</span> <span class="n">value</span>
+        <span class="p">})</span>
+        
+<span class="n">val_data</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+        <span class="n">train_data</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s2">&quot;Conjunto&quot;</span><span class="p">:</span> <span class="s2">&quot;val&quot;</span><span class="p">,</span>  
+            <span class="s2">&quot;Índice&quot;</span><span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">8</span><span class="o">+</span> <span class="n">j</span><span class="p">,</span> 
+            <span class="s2">&quot;Valor&quot;</span><span class="p">:</span> <span class="n">value</span>
+        <span class="p">})</span>
+<span class="n">test_data</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">test</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+        <span class="n">train_data</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s2">&quot;Conjunto&quot;</span><span class="p">:</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span>  
+            <span class="s2">&quot;Índice&quot;</span><span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">16</span><span class="o">+</span> <span class="n">j</span><span class="p">,</span> 
+            <span class="s2">&quot;Valor&quot;</span><span class="p">:</span> <span class="n">value</span>
+        <span class="p">})</span>
+
+<span class="c1"># Preparar los datos para la lista &#39;datos&#39;</span>
+<span class="n">datos_data</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Price&#39;</span><span class="p">]):</span>
+    <span class="n">datos_data</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+        <span class="s2">&quot;Conjunto&quot;</span><span class="p">:</span> <span class="s2">&quot;Datos&quot;</span><span class="p">,</span> 
+        <span class="s2">&quot;Fila&quot;</span><span class="p">:</span> <span class="s2">&quot;Serie Datos&quot;</span><span class="p">,</span> 
+        <span class="s2">&quot;Índice&quot;</span><span class="p">:</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span>  
+        <span class="s2">&quot;Valor&quot;</span><span class="p">:</span> <span class="n">value</span>
+    <span class="p">})</span>
+
+<span class="c1"># Combinar ambos conjuntos de datos en un DataFrame</span>
+<span class="n">df_plot</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">train_data</span> <span class="o">+</span> <span class="n">datos_data</span><span class="o">+</span><span class="n">val_data</span><span class="o">+</span><span class="n">test_data</span><span class="p">)</span>
+
+<span class="c1"># Crear el gráfico con Plotly Express</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">line</span><span class="p">(</span>
+    <span class="n">df_plot</span><span class="p">,</span> 
+    <span class="n">x</span><span class="o">=</span><span class="s2">&quot;Índice&quot;</span><span class="p">,</span> 
+    <span class="n">y</span><span class="o">=</span><span class="s2">&quot;Valor&quot;</span><span class="p">,</span> 
+    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;Conjunto&quot;</span><span class="p">,</span>  <span class="c1"># Diferenciar &#39;Train&#39; y &#39;Datos&#39;</span>
+      <span class="c1"># Mantener la separación por filas</span>
+    <span class="n">markers</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Gráfico de Train y Lista Datos&quot;</span>
+<span class="p">)</span>
+
+<span class="c1"># Mostrar la figura</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+</div>
+</div>
+<p>En la grafica se puede los horizones de predicción para cada ventana. el conjunto de train es igual al de validación sin embargo la prueba se mantiene con diferencia</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Ejercicio2.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Modelos estadísticos</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#datos">Datos</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#funcines">Funcines</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ventanas-deslizantes">Ventanas deslizantes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#construccion-del-modelo">Construcción del Modelo</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#metricas">Métricas</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#funcion-de-optimizacion">Función de optimización</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#serie-price">Serie Price</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#residuales">Residuales</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prediciones">Prediciones</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Johana y Claudia
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
